@@ -18,3 +18,8 @@ View your app in AI Studio: https://ai.studio/apps/5e67d508-df15-47d4-9a97-7067f
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+### Dashboard (Agent Workspace)
+- `apps/dashboard/` — Vite SPA + Express BFF for agentic workspace
+- Start: `cd apps/dashboard && npm install && npm run dev`
+- Runs on: http://localhost:3001
