@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { Composio } from '@composio/core';
@@ -8,14 +9,16 @@ import { SandboxClient } from '@agent-infra/sandbox';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import dotenv from "dotenv";
 
+dotenv.config({ path: '.env.local' });
 dotenv.config();
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  app.use(cors());
+  const PORT = 3001;
 
   // Sandbox reverse proxy
-  const sandboxTarget = 'http://host.docker.internal:8080';
+  const sandboxTarget = process.env.SANDBOX_URL || 'http://localhost:8080';
   app.use(['/vnc', '/code-server', '/jupyter', '/proxy'], createProxyMiddleware({
     target: sandboxTarget,
     changeOrigin: true,
@@ -76,7 +79,7 @@ async function startServer() {
   app.post("/api/sandbox/exec", async (req, res) => {
     try {
       const { command } = req.body;
-      const sandboxUrl = 'http://host.docker.internal:8080';
+      const sandboxUrl = process.env.SANDBOX_URL || 'http://localhost:8080';
       const sandbox = new SandboxClient({ environment: sandboxUrl });
       const result = await sandbox.shell.execCommand({ command });
       if (result.ok) {
@@ -92,7 +95,7 @@ async function startServer() {
 
   app.post("/api/sandbox/stats", async (req, res) => {
     try {
-      const sandboxUrl = 'http://host.docker.internal:8080';
+      const sandboxUrl = process.env.SANDBOX_URL || 'http://localhost:8080';
       const sandbox = new SandboxClient({ environment: sandboxUrl });
       const command = "top -bn1 | grep 'Cpu(s)' && echo '----' && free -m";
       const result = await sandbox.shell.execCommand({ command });
@@ -110,7 +113,7 @@ async function startServer() {
   app.post("/api/sandbox/files", async (req, res) => {
     try {
       const { dirPath = "/workspace" } = req.body;
-      const sandboxUrl = 'http://host.docker.internal:8080';
+      const sandboxUrl = process.env.SANDBOX_URL || 'http://localhost:8080';
       const sandbox = new SandboxClient({ environment: sandboxUrl });
       const result = await sandbox.file.listPath({ path: dirPath });
       if (result.ok) {
@@ -127,7 +130,7 @@ async function startServer() {
   app.post("/api/sandbox/save-config", async (req, res) => {
     try {
       const { config } = req.body;
-      const sandboxUrl = 'http://host.docker.internal:8080';
+      const sandboxUrl = process.env.SANDBOX_URL || 'http://localhost:8080';
       const sandbox = new SandboxClient({ environment: sandboxUrl });
       
       const configStr = JSON.stringify(config).replace(/"/g, '\\\\\\"');

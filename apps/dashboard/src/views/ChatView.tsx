@@ -230,7 +230,7 @@ class LocalStorageSyncAdapter implements StorageAdapter {
 
 const memoryStorage = new MemoryStorageAdapter();
 const storage = new LocalStorageSyncAdapter(memoryStorage);
-const registry = new ProviderRegistry();
+const registry = new ProviderRegistry(undefined);
 registry.register(new GoogleProvider());
 
 export function ChatView({
@@ -904,7 +904,7 @@ export function ChatView({
                           storage={storage}
                           providerRegistry={registry}
                           onModelChange={(m) =>
-                            setSelectedModel(m?.id || "gemini-3.1-pro-preview")
+                            setSelectedModel(m?.model || "gemini-3.1-pro-preview")
                           }
                           className="!h-[30px] !rounded-lg !border-border shadow-sm text-xs !bg-white hover:!bg-gray-50 transition-all font-medium text-gray-600"
                         />
@@ -1347,7 +1347,7 @@ export function ChatView({
                   storage={storage}
                   providerRegistry={registry}
                   onModelChange={(m) =>
-                    setSelectedModel(m?.id || "gemini-3.1-pro-preview")
+                    setSelectedModel(m?.model || "gemini-3.1-pro-preview")
                   }
                   className="!h-[30px] !rounded-lg !border-border shadow-sm text-xs !bg-white hover:!bg-gray-50 transition-all font-medium text-gray-600"
                 />
