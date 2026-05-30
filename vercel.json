@@ -1,0 +1,28 @@
+{
+  "rewrites": [
+    {
+      "source": "/vnc/(.*)",
+      "destination": "http://host.docker.internal:8080/vnc/$1"
+    },
+    {
+      "source": "/code-server/(.*)",
+      "destination": "http://host.docker.internal:8080/code-server/$1"
+    },
+    {
+      "source": "/jupyter/(.*)",
+      "destination": "http://host.docker.internal:8080/jupyter/$1"
+    },
+    {
+      "source": "/proxy/(.*)",
+      "destination": "http://host.docker.internal:8080/proxy/$1"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
